@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import {
     View,
-    TextInput,
     Text,
     StyleSheet,
     TouchableOpacity,
@@ -12,13 +11,10 @@ import { doc, getDoc, setDoc } from "firebase/firestore";
 
 export default function JoinClassForm({ route, navigation }) {
     const { cid } = route.params; // รับค่า cid จากหน้า AddClass
-    const [className, setClassName] = useState("");
-    const [group, setGroup] = useState("");
-    const [room, setRoom] = useState("");
-    const [subject, setSubject] = useState("");
-    const [stdid, setStdid] = useState("");
     const [name, setName] = useState("");
-
+    const [code, setCode] = useState("");
+    const [room, setRoom] = useState("");
+    
     useEffect(() => {
         fetchClassData();
     }, []);
@@ -30,22 +26,19 @@ export default function JoinClassForm({ route, navigation }) {
 
             if (classSnap.exists()) {
                 const classData = classSnap.data();
-                setClassName(classData.className || "ไม่มีชื่อคลาส");
-                setGroup(classData.group || "ไม่มีข้อมูลกลุ่ม");
+                setName(classData.name || "ไม่มีชื่อคลาส");
+                setCode(classData.code || "ไม่มีรหัสวิชา");
                 setRoom(classData.room || "ไม่มีข้อมูลห้อง");
-                setSubject(classData.subject || "ไม่มีข้อมูลวิชา");
             } else {
-                setClassName("ไม่พบข้อมูลคลาส");
-                setGroup("ไม่พบข้อมูล");
+                setName("ไม่พบข้อมูลคลาส");
+                setCode("ไม่พบรหัสวิชา");
                 setRoom("ไม่พบข้อมูล");
-                setSubject("ไม่พบข้อมูล");
             }
         } catch (error) {
             console.error("🔥 Error fetching class data:", error.message);
-            setClassName("เกิดข้อผิดพลาดในการโหลดข้อมูล");
-            setGroup("เกิดข้อผิดพลาด");
+            setName("เกิดข้อผิดพลาดในการโหลดข้อมูล");
+            setCode("เกิดข้อผิดพลาด");
             setRoom("เกิดข้อผิดพลาด");
-            setSubject("เกิดข้อผิดพลาด");
         }
     };
 
@@ -57,15 +50,9 @@ export default function JoinClassForm({ route, navigation }) {
             return;
         }
 
-        if (!stdid.trim() || !name.trim()) {
-            Alert.alert("แจ้งเตือน", "กรุณากรอกข้อมูลให้ครบถ้วน");
-            return;
-        }
-
         try {
             const studentRef = doc(db, `classroom/${cid}/students/${user.uid}`);
             await setDoc(studentRef, {
-                stdid,
                 name,
                 uid: user.uid,
                 email: user.email,
@@ -85,27 +72,10 @@ export default function JoinClassForm({ route, navigation }) {
     return (
         <View style={styles.container}>
             <Text style={styles.title}>Join Class</Text>
-            <Text style={styles.classInfo}>ชื่อคลาส: {className}</Text>
-            <Text style={styles.classInfo}>กลุ่ม: {group}</Text>
+            <Text style={styles.classInfo}>ชื่อคลาส: {name}</Text>
+            <Text style={styles.classInfo}>รหัสวิชา: {code}</Text>
             <Text style={styles.classInfo}>ห้อง: {room}</Text>
-            <Text style={styles.classInfo}>วิชา: {subject}</Text>
             <Text style={styles.subtitle}>Class ID: {cid}</Text>
-
-            <TextInput
-                style={styles.input}
-                value={stdid}
-                onChangeText={setStdid}
-                placeholder="รหัสนักศึกษา"
-                autoCapitalize="none"
-            />
-
-            <TextInput
-                style={styles.input}
-                value={name}
-                onChangeText={setName}
-                placeholder="ชื่อ - นามสกุล"
-                autoCapitalize="words"
-            />
 
             <TouchableOpacity style={styles.button} onPress={handleJoin}>
                 <Text style={styles.buttonText}>เข้าร่วมคลาส</Text>
@@ -137,16 +107,6 @@ const styles = StyleSheet.create({
         fontSize: 18,
         marginBottom: 10,
         color: "#555",
-    },
-    input: {
-        width: "100%",
-        height: 50,
-        borderWidth: 1,
-        borderColor: "#ccc",
-        borderRadius: 8,
-        paddingHorizontal: 15,
-        backgroundColor: "#fff",
-        marginBottom: 15,
     },
     button: {
         width: "100%",

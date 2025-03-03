@@ -22,7 +22,30 @@
       }
     },
     "web": {
-      "favicon": "./assets/favicon.png"
+      "favicon": "./assets/favicon.png",
+      "config": {
+        "firebase": {
+          "apiKey": "AIzaSyD3fKnhvyVNEWgE6lmgRtVsBZFSBjJdOOA",
+          "authDomain": "project-finalmbw.firebaseapp.com",
+          "projectId": "project-finalmbw",
+          "storageBucket": "project-finalmbw.firebasestorage.app",
+          "messagingSenderId": "742173296191",
+          "appId": "1:742173296191:web:91474e78e2c39275725a8a",
+          "measurementId": "G-MNXL2CMT5S"
+        }
+      }
+    },
+    "extra": {
+      "eas": {
+        "projectId": "d2e67f65-d465-4ff2-a4a5-dd36d3cdc968"
+      }
+    },
+    "owner": "suthinanll",
+    "runtimeVersion": {
+      "policy": "appVersion"
+    },
+    "updates": {
+      "url": "https://u.expo.dev/d2e67f65-d465-4ff2-a4a5-dd36d3cdc968"
     }
   }
 }

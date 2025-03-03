@@ -6,7 +6,8 @@ import {
     Alert,
     StyleSheet,
     FlatList,
-    TouchableOpacity
+    TouchableOpacity,
+    Image
 } from "react-native";
 import { auth, db } from "../firebase/firebaseConfig";
 import { doc, getDoc, collection, getDocs } from "firebase/firestore";
@@ -56,31 +57,31 @@ export default function HomeScreen({ navigation }) {
         try {
             const classRef = collection(db, `users/${uid}/classroom`);
             const classSnap = await getDocs(classRef);
-
+    
             const classList = [];
             for (let docSnap of classSnap.docs) {
-                const classData = docSnap.data();
                 const cid = docSnap.id;
-
                 const classroomRef = doc(db, "classroom", cid);
                 const classroomSnap = await getDoc(classroomRef);
-
+    
                 if (classroomSnap.exists()) {
                     classList.push({
                         cid,
-                        className: classroomSnap.data().className || "ไม่มีชื่อคลาส",
-                        subject: classroomSnap.data().subject || "ไม่มีข้อมูลวิชา",
+                        name: classroomSnap.data().name || "ไม่มีชื่อคลาส",
+                        code: classroomSnap.data().code || "ไม่มีรหัส",
                         room: classroomSnap.data().room || "ไม่มีข้อมูลห้อง",
+                        photo: classroomSnap.data().photo || "https://via.placeholder.com/100", // รูป
                     });
                 }
             }
-
+    
             setClasses(classList);
         } catch (error) {
             console.error("🔥 Error fetching user classes:", error.message);
             Alert.alert("เกิดข้อผิดพลาด", error.message);
         }
     };
+    
 
     useFocusEffect(
         useCallback(() => {
@@ -113,7 +114,7 @@ export default function HomeScreen({ navigation }) {
                         >
                             <IconButton icon="pencil" size={24} />
                         </TouchableOpacity>
-                        
+
                         <Card.Title
                             title={userData.name}
                             subtitle={`รหัสนักศึกษา : ${userData.stdid}`}
@@ -142,22 +143,35 @@ export default function HomeScreen({ navigation }) {
                         <Text style={styles.noClassText}>ไม่มีคลาสที่เข้าร่วม</Text>
                     ) : (
                         <FlatList
-                            data={classes}
-                            keyExtractor={(item) => item.cid}
-                            renderItem={({ item }) => (
-                                <View style={styles.classCard}>
-                                    <Text style={styles.className}>{item.className}</Text>
-                                    <Text style={styles.info}>วิชา: {item.subject}</Text>
-                                    <Text style={styles.info}>ห้อง: {item.room}</Text>
-                                    <TouchableOpacity
-                                        style={styles.button}
-                                        onPress={() => navigation.navigate("CheckAttendance", { cid: item.cid })}
-                                    >
-                                        <Text style={styles.buttonText}>เช็คชื่อ</Text>
-                                    </TouchableOpacity>
-                                </View>
-                            )}
-                        />
+                        data={classes}
+                        keyExtractor={(item) => item.cid}
+                        numColumns={2} // แสดงเป็น 2 คอลัมน์
+                        columnWrapperStyle={styles.row} // ใช้ flex สำหรับ grid
+                        renderItem={({ item }) => (
+                            <View style={styles.classCard}>
+                                <Image 
+                                    source={{ uri: item.photo }} 
+                                    style={styles.photo} // ใช้ Image แทน Avatar.Image
+                                />
+                                <Text style={styles.className}>{item.name}</Text>
+                                <Text style={styles.info}>รหัส: {item.code}</Text>
+                                <Text style={styles.info}>ห้อง: {item.room}</Text>
+                                <TouchableOpacity
+                                    style={styles.button}
+                                    onPress={() => navigation.navigate("Checkin", { 
+                                        cid: item.cid, 
+                                        uid: userData?.stdid,  // ส่งรหัสนักศึกษาไปด้วย
+                                        studentName: userData?.name // ส่งชื่อนักศึกษาไปด้วย
+                                    })}
+                                >
+                                    <Text style={styles.buttonText}>เช็คชื่อ</Text>
+                                </TouchableOpacity>
+                            </View>
+                        )}
+                    />
+                    
+                    
+
                     )}
 
                     {/* ปุ่ม FAB สำหรับเพิ่มคลาส */}
@@ -211,6 +225,13 @@ const styles = StyleSheet.create({
         textAlign: "center",
         color: "#777",
     },
+
+    // 🟢 **เพิ่มสไตล์สำหรับ Grid Layout**
+    row: {
+        flexDirection: "row",
+        flexWrap: "wrap",
+        justifyContent: "space-between",
+    },
     classCard: {
         backgroundColor: "#fff",
         padding: 15,
@@ -220,27 +241,37 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.1,
         shadowRadius: 4,
         elevation: 3,
+        width: "48%", // แบ่งให้เป็น 2 คอลัมน์
+        alignItems: "center", // จัดให้อยู่ตรงกลาง
+    },
+    photo: {
+        width: "100%", // ให้เต็มขนาดของ card
+        height: 120,  // ปรับความสูงตามต้องการ
+        borderRadius: 8, // มุมโค้งเล็กน้อย
+        marginBottom: 10,
     },
     className: {
         fontSize: 18,
         fontWeight: "bold",
         color: "#333",
+        textAlign: "center",
     },
     info: {
-        fontSize: 16,
+        fontSize: 14,
         color: "#555",
-        marginTop: 5,
+        textAlign: "center",
     },
     button: {
         marginTop: 10,
         backgroundColor: "#007bff",
-        padding: 10,
-        borderRadius: 8,
+        padding: 8,
+        borderRadius: 5,
+        width: "100%",
         alignItems: "center",
     },
     buttonText: {
         color: "#fff",
-        fontSize: 16,
+        fontSize: 14,
         fontWeight: "bold",
     },
     fab: {
@@ -249,6 +280,4 @@ const styles = StyleSheet.create({
         bottom: 30,
         backgroundColor: "#fff",
     },
-
 });
-

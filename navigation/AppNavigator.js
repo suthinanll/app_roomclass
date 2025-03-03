@@ -7,6 +7,12 @@ import EditProfileScreen from "../screens/EditProfileScreen";
 import AddClass from "../screens/AddClass";
 import QRScannerScreen from "../screens/QRScannerScreen";
 import JoinClassForm from "../screens/JoinClassForm";
+import Checkin from "../screens/Checkin"
+import Checkclass from "../screens/Checkclass"
+import QuestionScreen from "../screens/QuestionScreen"
+import PhoneLoginScreen from "../screens/PhoneLoginScreen"
+
+
 
 const Stack = createStackNavigator();
 
@@ -28,6 +34,12 @@ export default function AppNavigator({ navigation }) {
         options={{
           headerShown: false,
         }}
+      />
+
+      <Stack.Screen
+        name="Phone"
+        component={PhoneLoginScreen}
+        options={{ title: "" }} // ตรวจสอบให้แน่ใจว่า options ถูกกำหนดที่นี่
       />
       <Stack.Screen
         name="Register"
@@ -76,6 +88,36 @@ export default function AppNavigator({ navigation }) {
         component={JoinClassForm}
         options={{
           headerTitle: "Join Class",
+          headerTitleAlign: "center",
+          headerBackTitle: "", // ซ่อนชื่อปุ่ม Back
+        }}
+      />
+
+      <Stack.Screen
+        name="Checkin"
+        component={Checkin}
+        options={{
+          headerTitle: "Cehckin",
+          headerTitleAlign: "center",
+          headerBackTitle: "", // ซ่อนชื่อปุ่ม Back
+        }}
+      />
+      <Stack.Screen
+        name="Checkclass"
+        component={Checkclass}
+        options={{
+          headerTitle: "Checkclass",
+          headerTitleAlign: "center",
+          headerBackTitle: "", // ซ่อนชื่อปุ่ม Back
+        }}
+      />
+
+      <Stack.Screen
+        name="QA"
+        component={QuestionScreen}
+        options={{
+          headerTitle: "Question",
+          headerTitleAlign: "center",
           headerBackTitle: "", // ซ่อนชื่อปุ่ม Back
         }}
       />

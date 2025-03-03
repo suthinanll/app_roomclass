@@ -12,7 +12,6 @@ const firebaseConfig = {
   measurementId: "G-MNXL2CMT5S"
 };
 
-// ✅ เปลี่ยนให้ใช้ Firestore
 const app = initializeApp(firebaseConfig);
 export const auth = getAuth(app);
 export const db = getFirestore(app);

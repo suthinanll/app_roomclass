@@ -2,7 +2,6 @@ import { useState } from "react";
 import {
   View,
   TextInput,
-  Button,
   Text,
   StyleSheet,
   TouchableOpacity,
@@ -28,8 +27,8 @@ export default function LoginScreen({ navigation }) {
   };
 
   return (
-    <KeyboardAvoidingView 
-      behavior={Platform.OS === "ios" ? "padding" : "height"} 
+    <KeyboardAvoidingView
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
       style={styles.container}
     >
       <Text style={styles.title}>เข้าสู่ระบบ</Text>
@@ -59,6 +58,14 @@ export default function LoginScreen({ navigation }) {
 
       <TouchableOpacity onPress={() => navigation.navigate("Register")}>
         <Text style={styles.registerText}>สมัครสมาชิก</Text>
+      </TouchableOpacity>
+
+      {/* เพิ่มปุ่มเข้าสู่ระบบด้วย OTP */}
+      <TouchableOpacity
+        style={styles.otpButton}
+        onPress={() => navigation.navigate("Phone")}
+      >
+        <Text style={styles.otpButtonText}>เข้าสู่ระบบด้วย OTP</Text>
       </TouchableOpacity>
     </KeyboardAvoidingView>
   );
@@ -110,5 +117,19 @@ const styles = StyleSheet.create({
     color: "#007bff",
     fontSize: 16,
     marginTop: 10,
+  },
+  otpButton: {
+    width: "100%",
+    height: 50,
+    backgroundColor: "#28a745",
+    justifyContent: "center",
+    alignItems: "center",
+    borderRadius: 8,
+    marginTop: 10,
+  },
+  otpButtonText: {
+    color: "#fff",
+    fontSize: 18,
+    fontWeight: "bold",
   },
 });
