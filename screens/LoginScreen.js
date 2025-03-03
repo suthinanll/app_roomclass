@@ -61,12 +61,7 @@ export default function LoginScreen({ navigation }) {
       </TouchableOpacity>
 
       {/* เพิ่มปุ่มเข้าสู่ระบบด้วย OTP */}
-      <TouchableOpacity
-        style={styles.otpButton}
-        onPress={() => navigation.navigate("Phone")}
-      >
-        <Text style={styles.otpButtonText}>เข้าสู่ระบบด้วย OTP</Text>
-      </TouchableOpacity>
+    
     </KeyboardAvoidingView>
   );
 }

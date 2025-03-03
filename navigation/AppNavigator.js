@@ -36,11 +36,7 @@ export default function AppNavigator({ navigation }) {
         }}
       />
 
-      <Stack.Screen
-        name="Phone"
-        component={PhoneLoginScreen}
-        options={{ title: "" }} // ตรวจสอบให้แน่ใจว่า options ถูกกำหนดที่นี่
-      />
+     
       <Stack.Screen
         name="Register"
         component={RegisterScreen}
