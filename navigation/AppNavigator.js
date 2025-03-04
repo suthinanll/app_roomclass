@@ -10,7 +10,6 @@ import JoinClassForm from "../screens/JoinClassForm";
 import Checkin from "../screens/Checkin"
 import Checkclass from "../screens/Checkclass"
 import QuestionScreen from "../screens/QuestionScreen"
-import PhoneLoginScreen from "../screens/PhoneLoginScreen"
 
 
 
